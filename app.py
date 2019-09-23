@@ -73,3 +73,11 @@ def create_pages():
                 db.session.commit()
             print(f'Pages for {m.name} created!')
         print('All pages created!')
+
+
+@app.route('/')
+def index():
+    return '<h1>Shas App Here</h1>'
+
+if __name__ == '__main__':
+    app.run(debug=True, port=8000)

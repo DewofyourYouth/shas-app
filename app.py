@@ -79,5 +79,6 @@ def create_pages():
 def index():
     return '<h1>Shas App Here</h1>'
 
+
 if __name__ == '__main__':
     app.run(debug=True, port=8000)

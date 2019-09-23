@@ -11,7 +11,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
-class User(db.Model):
+class ShasUser(db.Model):
     u_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(80), nullable=False)
@@ -30,6 +30,11 @@ class Meseches(db.Model):
     def __repr__(self):
         return f'<Meseches: {self.name}>'
 
+xrefs = db.Table(
+    'xrefs',
+    db.Column('page_id', db.Integer, db.ForeignKey('page.p_id')),
+    db.Column('note_id', db.Integer, db.ForeignKey('note.n_id'))
+)
 
 class Page(db.Model):
     p_id = db.Column(db.Integer, primary_key=True)
@@ -47,8 +52,11 @@ class Note(db.Model):
     note_title = db.Column(db.String(100), nullable=True)
     note_text = db.Column(db.Text, nullable=False)
 
-    page_id = db.Column(db.Integer, db.ForeignKey(page.p_id), nullable=False)
-    page = db.relationship('Page', backref=db.backref('notes', lazy=True))
+    page_id = db.Column(db.Integer, db.ForeignKey('page.p_id'), nullable=False)
+    page = db.relationship('Page', backref=db.backref('p_notes', lazy=True))
+    suser_id = db.Column(db.Integer, db.ForeignKey('shas_user.u_id'), nullable=False)
+    suser = db.relationship('ShasUser', backref=db.backref('u_notes', lazy=True))
+    xrefs = db.relationship('Page', secondary=xrefs, backref=db.backref('xrefs', lazy='dynamic'))
 
 
 def create_pages():
